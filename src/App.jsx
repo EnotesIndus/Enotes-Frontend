@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import PasswordResetRequestPage from './pages/PasswordResetRequestPage';
 import SuccessPage from './pages/SuccessPage';
 import RegistrationPage from './pages/RegistrationPage';
+import Category from './pages/Category';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/categories" element={<Category />} />
 
         {/* Password Reset */}
         <Route path="/reset-request" element={<PasswordResetRequestPage />} />

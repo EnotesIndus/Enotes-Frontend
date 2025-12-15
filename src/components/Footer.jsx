@@ -1,6 +1,13 @@
 import { BookOpen } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const Footer = ({ onReset }) => (
+const Footer = ({ onReset }) =>{ 
+
+  const navigate = useNavigate();
+  const onClickReset= () => {
+    navigate('/reset-request');
+  }
+  return (
   <footer className="bg-gray-900 text-gray-400 py-12">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid md:grid-cols-3 gap-8">
@@ -24,7 +31,7 @@ const Footer = ({ onReset }) => (
           <h3 className="text-white font-semibold mb-4">Quick Links</h3>
           <div className="flex flex-col gap-2">
             <button
-              onClick={onReset}
+              onClick={onClickReset}
               className="text-sm text-left hover:text-indigo-400"
             >
               Reset Password
@@ -44,6 +51,6 @@ const Footer = ({ onReset }) => (
       </div>
     </div>
   </footer>
-);
+);}
 
 export default Footer;

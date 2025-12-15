@@ -164,7 +164,7 @@ const RegistrationPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4 py-12">
+    <div className="min-h-screen   from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4 py-12">
       <div className="w-full max-w-2xl">
         {/* Logo and Header */}
         <div className="text-center mb-8">
@@ -187,9 +187,9 @@ const RegistrationPage = () => {
                 : 'bg-red-50 border border-red-200'
             }`}>
               {message.type === 'success' ? (
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
               ) : (
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-red-600  mt-0.5" />
               )}
               <span className={`text-sm ${
                 message.type === 'success' ? 'text-green-800' : 'text-red-800'
