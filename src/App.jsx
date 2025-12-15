@@ -1,26 +1,36 @@
-import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import HomePage from './pages/HomePage';
+import Login from './pages/Login';
 import PasswordResetRequestPage from './pages/PasswordResetRequestPage';
 import SuccessPage from './pages/SuccessPage';
 
 const App = () => {
-  const [currentPage, setCurrentPage] = useState('home');
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Home */}
+        <Route path="/" element={<HomePage />} />
 
-  if (currentPage === 'home')
-    return <HomePage setCurrentPage={setCurrentPage} />;
+        {/* Auth */}
+        <Route path="/login" element={<Login />} />
 
-  if (currentPage === 'reset-request')
-    return <PasswordResetRequestPage onBack={() => setCurrentPage('home')} />;
-
-  if (currentPage === 'reset-success')
-    return (
-      <SuccessPage
-        title="Password Reset Complete"
-        message="You can now login."
-        buttonText="Login"
-        buttonAction={() => (window.location.href = '/login')}
-      />
-    );
+        {/* Password Reset */}
+        <Route path="/reset-request" element={<PasswordResetRequestPage />} />
+        <Route
+          path="/reset-success"
+          element={
+            <SuccessPage
+              title="Password Reset Complete"
+              message="You can now login."
+              buttonText="Login"
+              buttonAction={() => window.location.href = '/login'}
+            />
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
 export default App;
