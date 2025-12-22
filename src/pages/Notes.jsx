@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Star, Trash2, Download, Copy, RotateCcw, FileDown, X } from 'lucide-react';
+import { API_BASE_URL, API_BASE_URL_NOTES } from '../Constants/APICONSTANTS';
 
 const Notes = () => {
   const [notes, setNotes] = useState([]);
@@ -107,10 +108,13 @@ const Notes = () => {
     ));
     setIsEditing(false);
   };
+  
 
   return (
     <div className="min-h-screen from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
+        <h1>{API_BASE_URL_NOTES}</h1>
+
       <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">

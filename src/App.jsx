@@ -20,7 +20,7 @@ const App = () => {
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/categories" element={<Category />} />
         <Route path="/notes" element={<Notes/>} />
-
+    
         {/* Password Reset */}
         <Route path="/reset-request" element={<PasswordResetRequestPage />} />
         <Route
