@@ -7,6 +7,7 @@ import SuccessPage from './pages/SuccessPage';
 import RegistrationPage from './pages/RegistrationPage';
 import Category from './pages/Category';
 import Notes from './pages/Notes';
+import Todo from './pages/Todo';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/categories" element={<Category />} />
         <Route path="/notes" element={<Notes/>} />
+        <Route path="/todo" element={<Todo/>} />
     
         {/* Password Reset */}
         <Route path="/reset-request" element={<PasswordResetRequestPage />} />
