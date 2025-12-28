@@ -1,66 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../redux/auth/authThunks';
+import { resetAuthState } from '../redux/auth/authSlice';
 import { AlertCircle, Mail, Lock, Eye, EyeOff, BookOpen, ArrowRight } from 'lucide-react';
-
-const API_BASE_URL = 'http://localhost:8080';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleLogin = async () => {
-    setError('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
+  useEffect(() => {
+    // If user is already logged in, redirect to dashboard
+    if (isSuccess || user) {
+      navigate('/dashboard');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      dispatch(resetAuthState());
+    };
+  }, [user, isSuccess, navigate, dispatch]);
+
+  const handleLogin = () => {
     // Validation
     if (!email || !password) {
-      setError('Please enter both email and password');
       return;
     }
 
     if (!email.includes('@')) {
-      setError('Please enter a valid email address');
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Store token or user data as needed
-        if (data.token) {
-          localStorage.setItem('authToken', data.token);
-        }
-        if (data.user) {
-          localStorage.setItem('user', JSON.stringify(data.user));
-        }
-        
-        // Redirect to dashboard or home
-        window.location.href = '/dashboard';
-      } else {
-        setError(data.message || 'Unable to login. Please check your credentials.');
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again later.');
-      console.error('Login error:', err);
-    } finally {
-      setLoading(false);
-    }
+    // Dispatch login action
+    dispatch(loginUser({ email, password }));
   };
 
   const handleKeyPress = (e) => {
@@ -70,7 +50,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen  from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo and Header */}
         <div className="text-center mb-8">
@@ -86,10 +66,18 @@ const Login = () => {
         {/* Login Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           {/* Error Message */}
-          {error && (
+          {isError && message && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
-              <span className="text-sm text-red-800">{error}</span>
+              <span className="text-sm text-red-800">{message}</span>
+            </div>
+          )}
+
+          {/* Validation Errors */}
+          {!email && !password && (
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg  items-start gap-3 hidden" id="validation-error">
+              <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
+              <span className="text-sm text-amber-800">Please enter both email and password</span>
             </div>
           )}
 
@@ -107,7 +95,7 @@ const Login = () => {
                 onKeyPress={handleKeyPress}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                 placeholder="Enter your email"
-                disabled={loading}
+                disabled={isLoading}
               />
             </div>
           </div>
@@ -126,7 +114,7 @@ const Login = () => {
                 onKeyPress={handleKeyPress}
                 className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                 placeholder="Enter your password"
-                disabled={loading}
+                disabled={isLoading}
               />
               <button
                 type="button"
@@ -150,7 +138,7 @@ const Login = () => {
               <span className="text-sm text-gray-700">Remember me</span>
             </label>
             <button
-              onClick={() => window.location.href = '/forgot-password'}
+              onClick={() => navigate('/forgot-password')}
               className="text-sm text-indigo-600 hover:text-indigo-700 font-medium transition"
             >
               Forgot Password?
@@ -160,10 +148,10 @@ const Login = () => {
           {/* Login Button */}
           <button
             onClick={handleLogin}
-            disabled={loading}
+            disabled={isLoading}
             className="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
           >
-            {loading ? (
+            {isLoading ? (
               <>
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 <span>Signing in...</span>
@@ -210,7 +198,7 @@ const Login = () => {
           <div className="text-center">
             <span className="text-sm text-gray-600">Don't have an account? </span>
             <button
-              onClick={() => window.location.href = '/register'}
+              onClick={() => navigate('/register')}
               className="text-sm text-indigo-600 hover:text-indigo-700 font-medium transition"
             >
               Sign up
@@ -222,21 +210,21 @@ const Login = () => {
         <div className="mt-8 text-center">
           <div className="flex items-center justify-center gap-6 text-sm text-gray-600">
             <button 
-              onClick={() => window.location.href = '/'}
+              onClick={() => navigate('/')}
               className="hover:text-indigo-600 transition"
             >
               Home
             </button>
             <span className="text-gray-400">•</span>
             <button 
-              onClick={() => window.location.href = '/privacy'}
+              onClick={() => navigate('/privacy')}
               className="hover:text-indigo-600 transition"
             >
               Privacy
             </button>
             <span className="text-gray-400">•</span>
             <button 
-              onClick={() => window.location.href = '/terms'}
+              onClick={() => navigate('/terms')}
               className="hover:text-indigo-600 transition"
             >
               Terms
