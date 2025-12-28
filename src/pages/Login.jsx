@@ -20,7 +20,7 @@ const Login = () => {
   useEffect(() => {
     // If user is already logged in, redirect to dashboard
     if (isSuccess || user) {
-      navigate('/dashboard');
+      navigate('/notes');
     }
 
     // Cleanup on unmount

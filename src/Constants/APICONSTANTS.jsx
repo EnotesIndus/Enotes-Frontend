@@ -20,23 +20,25 @@ export const GET_TODO_BY_ID = API_BASE_URL_TODO; //use /{id}
 export const GET_TODO_BY_STATUS = API_BASE_URL_TODO +'/by-status';
 
 
+export const NOTES_ENDPOINTS = {
 // notes endpoints
-export const ALL_NOTES = API_BASE_URL_NOTES + '/';
-export const USER_NOTES = API_BASE_URL_NOTES + '/user-notes';
-export const SEARCH_NOTES = API_BASE_URL_NOTES + '/search-notes';
-export const SAVE_NOTES = API_BASE_URL_NOTES + '/save-notes';
-export const DELETE_NOTES = API_BASE_URL_NOTES + '/delete'; //use /{id}
-export const RESTORE_NOTES = API_BASE_URL_NOTES + '/restore'; //use /{id}
-export const DOWNLOAD_NOTES = API_BASE_URL_NOTES + '/download'; //use /{id}
-export const RECYCLE_NOTES = API_BASE_URL_NOTES + '/recycle'; 
-export const RECYCLE_DELETE_NOTES = API_BASE_URL_NOTES + '/recycle/delete';   // use /{id};
-export const RECYCLE_ALL_DELETE_NOTES = API_BASE_URL_NOTES + '/recycle/deleteAll';   
-export const SAVE_FAV_NOTES = API_BASE_URL_NOTES + '/fav'; // use /{notesId};   
-export const UNFAV_NOTES = API_BASE_URL_NOTES + '/unfav/'; // use {favnotesId}'; 
-export const ALL_FAV_NOTES = API_BASE_URL_NOTES + '/favs'; 
-export const COPY_NOTES = API_BASE_URL_NOTES + '/copy'; // use /{id}'; 
-export const DOWNLOAD_EXCEL_NOTES = API_BASE_URL_NOTES + '/notes-excel';  
+  ALL_NOTES: API_BASE_URL_NOTES + '/',
+  USER_NOTES: API_BASE_URL_NOTES + '/user-notes',
+  SEARCH_NOTES: API_BASE_URL_NOTES + '/search-notes',
+  SAVE_NOTES: API_BASE_URL_NOTES + '/save-notes',
+  DELETE_NOTES: API_BASE_URL_NOTES + '/delete', //use /{id}
+  RESTORE_NOTES: API_BASE_URL_NOTES + '/restore', //use /{id}
+  DOWNLOAD_NOTES: API_BASE_URL_NOTES + '/download', //use /{id}
+  RECYCLE_NOTES: API_BASE_URL_NOTES + '/recycle', 
+  RECYCLE_DELETE_NOTES: API_BASE_URL_NOTES + '/recycle/delete',   // use /{id};
+  RECYCLE_ALL_DELETE_NOTES: API_BASE_URL_NOTES + '/recycle/deleteAll',   
+  SAVE_FAV_NOTES: API_BASE_URL_NOTES + '/fav', // use /{notesId};   
+  UNFAV_NOTES: API_BASE_URL_NOTES + '/unfav/', // use {favnotesId}'; 
+  ALL_FAV_NOTES: API_BASE_URL_NOTES + '/favs', 
+  COPY_NOTES: API_BASE_URL_NOTES + '/copy', // use /{id}'; 
+  DOWNLOAD_EXCEL_NOTES: API_BASE_URL_NOTES + '/notes-excel',  
 
+}
 
 
 // home endpoints
