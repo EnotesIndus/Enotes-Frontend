@@ -11,11 +11,11 @@ export const notesAPI = {
   getAllNotes: () => axiosInstance.get(NOTES_ENDPOINTS.ALL_NOTES),
 
   // Get user notes with pagination
-  getUserNotes: (pageNo = 0, pageSize = 10) => 
+  getUserNotes: (pageNo = 0, pageSize = 9) => 
     axiosInstance.get(`${NOTES_ENDPOINTS.USER_NOTES}?pageNo=${pageNo}&pageSize=${pageSize}`),
 
   // Search notes
-  searchNotes: (pageNo = 0, pageSize = 10, keyword = '') => 
+  searchNotes: (pageNo = 0, pageSize = 9, keyword = '') => 
     axiosInstance.get(`${NOTES_ENDPOINTS.SEARCH_NOTES}?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`),
 
   // Save/Create note
@@ -25,10 +25,10 @@ export const notesAPI = {
     }),
 
   // Delete note (soft delete - moves to recycle bin)
-  deleteNote: (id) => axiosInstance.delete(`${NOTES_ENDPOINTS.DELETE_NOTES}/${id}`),
+  deleteNote: (id) => axiosInstance.get(`${NOTES_ENDPOINTS.DELETE_NOTES}/${id}`),
 
   // Restore note from recycle bin
-  restoreNote: (id) => axiosInstance.put(`${NOTES_ENDPOINTS.RESTORE_NOTES}/${id}`),
+  restoreNote: (id) => axiosInstance.get(`${NOTES_ENDPOINTS.RESTORE_NOTES}/${id}`),
 
   // Download file attachment
   downloadFile: (id) => 
