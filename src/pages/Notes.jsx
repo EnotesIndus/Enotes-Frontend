@@ -208,7 +208,8 @@ const Notes = () => {
       id: selectedNote.id,
       title: selectedNote.title,
       description: selectedNote.description,
-      category: selectedNote.category || { id: 8 }
+      category: selectedNote.category || { id: 8 },
+      createdOn: selectedNote.createdAt,
     };
 
     console.log('💾 Saving note changes:', noteData);
@@ -379,7 +380,17 @@ const Notes = () => {
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">{note.description || 'No description'}</p>
 
                   <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                    <span>{note.createdAt || 'No date'}</span>
+                     <span>
+                        {note.createdOn
+                          ? new Date(note.createdOn).toLocaleString("en-IN", {
+                              year: "numeric",
+                              month: "short",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit"
+                            })
+                          : "No date"}
+                      </span>
                     {note.hasFile && (
                       <span className="flex items-center gap-1 text-indigo-600">
                         <Download size={14} />
