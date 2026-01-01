@@ -8,13 +8,7 @@ const Navbar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
   return (
     <nav className="bg-white shadow-sm">
       <div className="w-full px-6 h-16 flex justify-between items-center">
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate('/')}
-        >
-          <BookOpen className="w-8 h-8 text-indigo-600" />
-          <span className="text-2xl font-bold">E-Notes</span>
-        </div>
+       
 
         <div className="hidden md:flex gap-6">
           <a href="#features">Features</a>
