@@ -76,17 +76,17 @@ const notesSlice = createSlice({
         state.isLoading = true;
       })
      .addCase(fetchUserNotes.fulfilled, (state, action) => {
-  state.isLoading = false;
-  state.isSuccess = true;
-  state.notes = action.payload.notesDtoList; // ← Changed this
-  state.pagination = {
-    pageNo: action.payload.pageNo,
-    pageSize: action.payload.pageSize,
-    totalElements: action.payload.totalElements,
-    totalPages: action.payload.totalPages,
-    isFirst: action.payload.isFirst,
-    islast: action.payload.islast,
-  };
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.notes = action.payload.notesDtoList; // ← Changed this
+        state.pagination = {
+          pageNo: action.payload.pageNo,
+          pageSize: action.payload.pageSize,
+          totalElements: action.payload.totalElements,
+          totalPages: action.payload.totalPages,
+          isFirst: action.payload.isFirst,
+          islast: action.payload.islast,
+        };
 })
       .addCase(fetchUserNotes.rejected, (state, action) => {
         state.isLoading = false;
@@ -206,11 +206,12 @@ const notesSlice = createSlice({
       })
       
       // Fetch All Favorites
-      .addCase(fetchAllFavorites.fulfilled, (state, action) => {
+        .addCase(fetchAllFavorites.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.favoriteNotes = action.payload;
       })
+
       
       // Copy Note
       .addCase(copyNote.fulfilled, (state) => {
