@@ -53,7 +53,7 @@ export const notesAPI = {
 
   // Remove from favorites
   removeFromFavorites: (favnotesId) => 
-    axiosInstance.delete(`${NOTES_ENDPOINTS.UNFAV_NOTES}${favnotesId}`),
+    axiosInstance.post(`${NOTES_ENDPOINTS.UNFAV_NOTES}${favnotesId}`),
 
   // Get all favorite notes
   getAllFavorites: () => axiosInstance.get(NOTES_ENDPOINTS.ALL_FAV_NOTES),

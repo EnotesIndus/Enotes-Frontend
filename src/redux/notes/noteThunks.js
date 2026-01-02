@@ -144,12 +144,36 @@ export const fetchAllFavorites = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await notesAPI.getAllFavorites();
-      return response.data.data || response.data;
+      
+      // The actual array is in response.data.data, not response.data
+      const favoritesArray = response.data.data; // <-- THIS IS THE FIX
+      
+      console.log('🔍 API Response:', favoritesArray);
+      
+      return favoritesArray.map(fav => ({
+        favId: fav.id,            // favorite row id
+        id: fav.notesDto.id,      // note id
+        title: fav.notesDto.title,
+        description: fav.notesDto.description,
+        category: fav.notesDto.category,
+        fileDetails: fav.notesDto.fileDetails,
+        createdBy: fav.notesDto.createdBy,
+        createdOn: fav.notesDto.createdOn,
+        updatedBy: fav.notesDto.updatedBy,
+        updatedOn: fav.notesDto.updatedOn,
+        isDeleted: fav.notesDto.isDeleted,
+        deletedOn: fav.notesDto.deletedOn,
+        isFavorite: true,
+      }));
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      console.error('❌ Fetch favorites error:', error);
+      return rejectWithValue(
+        error.response?.data?.message || error.message
+      );
     }
   }
 );
+
 
 // Copy note
 export const copyNote = createAsyncThunk(
