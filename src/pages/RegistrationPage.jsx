@@ -382,7 +382,7 @@ const RegistrationPage = () => {
           <button
             onClick={handleRegister}
             disabled={isLoading}
-            className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
+            className="w-full mt-6 bg-indigo-600  py-3 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
           >
             {isLoading ? (
               <>

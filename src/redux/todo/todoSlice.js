@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllTodo, getTodoById, getTodoByStatus, saveTodo } from "./todoThunks";
+import { changeStatus, deleteTodo, getAllTodo, getTodoById, getTodoByStatus, saveTodo } from "./todoThunks";
 
 
 const initialState = {
@@ -103,6 +103,45 @@ const todoSlice = createSlice({
                 state.isError = true;
                 state.message = action.payload;
             })
+
+        builder
+            // Delete Todo
+            .addCase(deleteTodo.pending,(state)=>{
+                state.isLoading = true;
+            })                    
+            .addCase(deleteTodo.fulfilled,(state,action)=>{ 
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload.message;
+                state.todos = state.todos.filter(todo => todo.id !== action.meta.arg);
+            })
+            .addCase(deleteTodo.rejected,(state,action)=>{     
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })  
+
+        builder
+            // Change Status
+            .addCase(changeStatus.pending,(state)=>{
+                state.isLoading = true;
+            })                    
+            .addCase(changeStatus.fulfilled,(state,action)=>{ 
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload.message;
+                const { id, status } = action.meta.arg;
+                const index = state.todos.findIndex(todo => todo.id === id);
+                if (index !== -1) {
+                    state.todos[index].status = status;
+                }
+            })
+            .addCase(changeStatus.rejected,(state,action)=>{     
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })      
+            
     },
     
 });

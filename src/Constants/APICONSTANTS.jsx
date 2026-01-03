@@ -19,6 +19,8 @@ export const TODO_ENDPOINTS = {
     SAVE_TODO: API_BASE_URL_TODO + '/save-todo',
     GET_TODO_BY_ID: API_BASE_URL_TODO, //use /{id}
     GET_TODO_BY_STATUS: API_BASE_URL_TODO +'/by-status',
+    DELETE_TODO: API_BASE_URL_TODO + '/delete', //use /{id}
+    CHANGE_STATUS: API_BASE_URL_TODO  //'/{id}/status', //use /{id}
 }
 
 export const NOTES_ENDPOINTS = {

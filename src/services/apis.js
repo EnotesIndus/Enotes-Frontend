@@ -74,5 +74,13 @@ export const todoAPI = {
   saveTodo: (todoData) => axiosInstance.post(TODO_ENDPOINTS.SAVE_TODO, todoData),
   getTodoById: (id) => axiosInstance.get(`${TODO_ENDPOINTS.GET_TODO_BY_ID}/${id}`),
   getTodoByStatus: (status) => axiosInstance.get(`${TODO_ENDPOINTS.GET_TODO_BY_STATUS}/${status}`),
-
+  deleteTodo: (id) => axiosInstance.delete(`${TODO_ENDPOINTS.DELETE_TODO}/${id}`),
+ changeStatus: (id, status) => {
+    return axiosInstance.put(`${TODO_ENDPOINTS.CHANGE_STATUS}/${id}/status`, status, {
+      headers: {
+        'Content-Type': 'application/json', 
+      }
+    });
+  }
+  
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Plus, CheckCircle, Circle, Clock, AlertCircle, Trash2, Edit2, X } from 'lucide-react';
-import { getAllTodo, saveTodo, getTodoById, getTodoByStatus } from '../redux/todo/todoThunks';
+import { getAllTodo, saveTodo, getTodoById, getTodoByStatus, deleteTodo, changeStatus } from '../redux/todo/todoThunks';
 import { resetTodoState, setCurrentTodo, clearTodos } from '../redux/todo/todoSlice';
 
 const Todo = () => {
@@ -123,7 +123,6 @@ const Todo = () => {
   const handleUpdateTodo = async () => {
     if (!editingTodo) return;
     
-    // Assuming you have an updateTodo thunk
     await dispatch(saveTodo(editingTodo));
     setEditingTodo(null);
     
@@ -135,17 +134,16 @@ const Todo = () => {
     }
   };
 
-  const deleteTodo = async (id) => {
-    // You'll need to create a deleteTodo thunk
-    // For now, this is a placeholder
-    console.log('Delete todo:', id);
+  const handleDeleteTodo = async (id) => {
+    if (window.confirm('Are you sure you want to delete this task?')) {
+      await dispatch(deleteTodo(id));
+      // No need to refresh - the reducer already removes it from state
+    }
   };
 
   const updateStatus = async (id, newStatus) => {
-    // Fetch the todo, update its status, and save
-    await dispatch(getTodoById(id));
-    // After getting the todo, update and save
-    // This would require the currentTodo from state
+    await dispatch(changeStatus({ id, status: newStatus }));
+    // No need to refresh - the reducer already updates it in state
   };
 
   const getStatusCount = (status) => {
@@ -286,7 +284,7 @@ const Todo = () => {
                           <Edit2 size={18} />
                         </button>
                         <button
-                          onClick={() => deleteTodo(todo.id)}
+                          onClick={() => handleDeleteTodo(todo.id)}
                           className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                           title="Delete"
                         >
