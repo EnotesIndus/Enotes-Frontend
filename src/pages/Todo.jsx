@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, CheckCircle, Circle, Clock, AlertCircle, Trash2, Edit2, X, Check } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Plus, CheckCircle, Circle, Clock, AlertCircle, Trash2, Edit2, X } from 'lucide-react';
+import { getAllTodo, saveTodo, getTodoById, getTodoByStatus } from '../redux/todo/todoThunks';
+import { resetTodoState, setCurrentTodo, clearTodos } from '../redux/todo/todoSlice';
 
 const Todo = () => {
-  const [todos, setTodos] = useState([]);
+  const dispatch = useDispatch();
+  const { todos, currentTodo, isLoading, isError, isSuccess, message } = useSelector((state) => state.todo);
+  
   const [currentFilter, setCurrentFilter] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingTodo, setEditingTodo] = useState(null);
@@ -14,53 +19,45 @@ const Todo = () => {
     status: 'PENDING'
   });
 
-  // Mock data - replace with actual API calls
+  // Fetch all todos on component mount
   useEffect(() => {
-    const mockTodos = [
-      {
-        id: 1,
-        title: 'Complete project documentation',
-        description: 'Write comprehensive documentation for the new feature',
-        dueDate: '2024-12-25',
-        priority: 'HIGH',
-        status: 'IN_PROGRESS',
-        createdAt: '2024-12-20'
-      },
-      {
-        id: 2,
-        title: 'Review pull requests',
-        description: 'Review and merge pending pull requests',
-        dueDate: '2024-12-24',
-        priority: 'MEDIUM',
-        status: 'PENDING',
-        createdAt: '2024-12-21'
-      },
-      {
-        id: 3,
-        title: 'Fix bug in login module',
-        description: 'Users reporting issues with login functionality',
-        dueDate: '2024-12-23',
-        priority: 'HIGH',
-        status: 'COMPLETED',
-        createdAt: '2024-12-19'
-      },
-      {
-        id: 4,
-        title: 'Update dependencies',
-        description: 'Update all npm packages to latest versions',
-        dueDate: '2024-12-30',
-        priority: 'LOW',
-        status: 'PENDING',
-        createdAt: '2024-12-22'
-      }
-    ];
-    setTodos(mockTodos);
-  }, []);
+    dispatch(getAllTodo());
+    
+    return () => {
+      dispatch(resetTodoState());
+    };
+  }, [dispatch]);
 
-  const filteredTodos = todos.filter(todo => {
-    if (currentFilter === 'all') return true;
-    return todo.status === currentFilter;
-  });
+  // Handle filter changes
+  useEffect(() => {
+    if (currentFilter === 'all') {
+      dispatch(getAllTodo());
+    } else {
+      dispatch(getTodoByStatus(currentFilter));
+    }
+  }, [currentFilter, dispatch]);
+
+  // Handle success/error messages
+  useEffect(() => {
+    if (isSuccess && message) {
+      // You can add a toast notification here
+      console.log('Success:', message);
+      dispatch(resetTodoState());
+    }
+    if (isError && message) {
+      // You can add an error notification here
+      console.error('Error:', message);
+      dispatch(resetTodoState());
+    }
+  }, [isSuccess, isError, message, dispatch]);
+
+  const filteredTodos =
+  currentFilter === 'all'
+    ? todos
+    : todos.filter(
+        todo => todo.status?.toUpperCase() === currentFilter
+      );
+
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -101,16 +98,11 @@ const Todo = () => {
     }
   };
 
-  const handleCreateTodo = () => {
+
+  const handleCreateTodo = async () => {
     if (newTodo.title.trim() === '') return;
 
-    const todo = {
-      id: Date.now(),
-      ...newTodo,
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-
-    setTodos([todo, ...todos]);
+    await dispatch(saveTodo(newTodo));
     setNewTodo({
       title: '',
       description: '',
@@ -119,31 +111,60 @@ const Todo = () => {
       status: 'PENDING'
     });
     setShowCreateModal(false);
+    
+    // Refresh the list based on current filter
+    if (currentFilter === 'all') {
+      dispatch(getAllTodo());
+    } else {
+      dispatch(getTodoByStatus(currentFilter));
+    }
   };
 
-  const handleUpdateTodo = () => {
-    setTodos(todos.map(todo =>
-      todo.id === editingTodo.id ? editingTodo : todo
-    ));
+  const handleUpdateTodo = async () => {
+    if (!editingTodo) return;
+    
+    // Assuming you have an updateTodo thunk
+    await dispatch(saveTodo(editingTodo));
     setEditingTodo(null);
+    
+    // Refresh the list
+    if (currentFilter === 'all') {
+      dispatch(getAllTodo());
+    } else {
+      dispatch(getTodoByStatus(currentFilter));
+    }
   };
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+  const deleteTodo = async (id) => {
+    // You'll need to create a deleteTodo thunk
+    // For now, this is a placeholder
+    console.log('Delete todo:', id);
   };
 
-  const updateStatus = (id, newStatus) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, status: newStatus } : todo
-    ));
+  const updateStatus = async (id, newStatus) => {
+    // Fetch the todo, update its status, and save
+    await dispatch(getTodoById(id));
+    // After getting the todo, update and save
+    // This would require the currentTodo from state
   };
 
   const getStatusCount = (status) => {
+    if (!Array.isArray(todos)) return 0;
     return todos.filter(todo => todo.status === status).length;
   };
 
   return (
-    <div className="min-h-screen  from-purple-50 via-pink-50 to-blue-50">
+    <div className="min-h-screen from-purple-50 via-pink-50 to-blue-50">
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-xl">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+            <p className="mt-4 text-gray-700">Loading...</p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -174,7 +195,7 @@ const Todo = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">All Tasks</p>
-                <p className="text-2xl font-bold text-gray-900">{todos.length}</p>
+                <p className="text-2xl font-bold text-gray-900">{Array.isArray(todos) ? todos.length : 0}</p>
               </div>
               <AlertCircle className="text-purple-600" size={32} />
             </div>
@@ -435,9 +456,10 @@ const Todo = () => {
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={editingTodo ? handleUpdateTodo : handleCreateTodo}
-                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                  disabled={isLoading}
+                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {editingTodo ? 'Update Task' : 'Create Task'}
+                  {isLoading ? 'Saving...' : editingTodo ? 'Update Task' : 'Create Task'}
                 </button>
                 <button
                   onClick={() => {

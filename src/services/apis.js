@@ -1,9 +1,9 @@
 import axiosInstance from './axiosConfig';
-import { NOTES_ENDPOINTS } from '../Constants/APICONSTANTS';
+import { NOTES_ENDPOINTS, TODO_ENDPOINTS,AUTH_ENDPOINTS } from '../Constants/APICONSTANTS';
 
 export const authAPI = {
-  login: (credentials) => axiosInstance.post('/auth/login', credentials),
-  register: (userData) => axiosInstance.post('/auth/register', userData),
+  login: (credentials) => axiosInstance.post(AUTH_ENDPOINTS.LOGIN_USER, credentials),
+  register: (userData) => axiosInstance.post(AUTH_ENDPOINTS.REGISTER_USER, userData),
 };
 
 export const notesAPI = {
@@ -67,3 +67,12 @@ export const notesAPI = {
       responseType: 'blob' 
     }),
 };
+
+export const todoAPI = {
+
+  getAllTodo: () => axiosInstance.get(TODO_ENDPOINTS.ALL_TODO),
+  saveTodo: (todoData) => axiosInstance.post(TODO_ENDPOINTS.SAVE_TODO, todoData),
+  getTodoById: (id) => axiosInstance.get(`${TODO_ENDPOINTS.GET_TODO_BY_ID}/${id}`),
+  getTodoByStatus: (status) => axiosInstance.get(`${TODO_ENDPOINTS.GET_TODO_BY_STATUS}/${status}`),
+
+}

@@ -13,13 +13,7 @@ const Navbar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
         <div className="hidden md:flex gap-6">
           <a href="#features">Features</a>
           <a href="#about">About</a>
-          <button onClick={() => navigate('/login')}>Login</button>
-          <button
-            onClick={() => navigate('/register')}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
-          >
-            Get Started
-          </button>
+          
         </div>
 
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden">

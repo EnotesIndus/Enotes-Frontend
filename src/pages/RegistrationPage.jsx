@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { AlertCircle, CheckCircle, Mail, Lock, Eye, EyeOff, BookOpen, User, Phone, ArrowRight } from 'lucide-react';
-
-const API_BASE_URL = 'http://localhost:8080';
+import { registerUser } from '../redux/auth/authThunks';
+import { resetAuthState } from '../redux/auth/authSlice';
+import { DEFAULT_USER_ROLE, PASSWORD_REGEX, EMAIL_REGEX, MOBILE_REGEX } from '../Constants/authConstants/AuthConstant';
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  // Redux state
+  const { isLoading, isSuccess, isError, message } = useSelector((state) => state.auth);
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -16,10 +23,30 @@ const RegistrationPage = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState({ type: '', text: '' });
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+
+  // Handle success
+  useEffect(() => {
+    if (isSuccess) {
+      // Clear form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        mobileNo: '',
+      });
+      setAgreeToTerms(false);
+
+      // Redirect to login after 3 seconds
+      setTimeout(() => {
+        dispatch(resetAuthState());
+        navigate('/login');
+      }, 3000);
+    }
+  }, [isSuccess, navigate, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,14 +83,14 @@ const RegistrationPage = () => {
     // Email validation
     if (!formData.email) {
       newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (!EMAIL_REGEX.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
 
     // Mobile number validation
     if (!formData.mobileNo) {
       newErrors.mobileNo = 'Mobile number is required';
-    } else if (!/^\d{10}$/.test(formData.mobileNo.replace(/\D/g, ''))) {
+    } else if (!MOBILE_REGEX.test(formData.mobileNo.replace(/\D/g, ''))) {
       newErrors.mobileNo = 'Please enter a valid 10-digit mobile number';
     }
 
@@ -72,7 +99,7 @@ const RegistrationPage = () => {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
+    } else if (!PASSWORD_REGEX.test(formData.password)) {
       newErrors.password = 'Password must contain uppercase, lowercase, and number';
     }
 
@@ -93,68 +120,21 @@ const RegistrationPage = () => {
   };
 
   const handleRegister = async () => {
-    setMessage({ type: '', text: '' });
-
     if (!validateForm()) {
-      setMessage({ type: 'error', text: 'Please fix the errors in the form' });
       return;
     }
 
-    setLoading(true);
+    // Prepare user data with constant role
+    const userData = {
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+      mobileNo: formData.mobileNo.replace(/\D/g, ''),
+      role: DEFAULT_USER_ROLE // Using constant role
+    };
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName.trim(),
-          lastName: formData.lastName.trim(),
-          email: formData.email.trim(),
-          password: formData.password,
-          mobileNo: formData.mobileNo.replace(/\D/g, ''),
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage({ 
-          type: 'success', 
-          text: data.message || 'Registration successful! Please check your email to verify your account.' 
-        });
-        
-        // Clear form
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          mobileNo: '',
-        });
-        setAgreeToTerms(false);
-
-        // Redirect to login after 3 seconds
-        setTimeout(() => {
-          navigate('/login');
-        }, 3000);
-      } else {
-        setMessage({ 
-          type: 'error', 
-          text: data.message || 'Registration failed. Please try again.' 
-        });
-      }
-    } catch (err) {
-      setMessage({ 
-        type: 'error', 
-        text: 'An error occurred. Please try again later.' 
-      });
-      console.error('Registration error:', err);
-    } finally {
-      setLoading(false);
-    }
+    dispatch(registerUser(userData));
   };
 
   const handleKeyPress = (e) => {
@@ -164,7 +144,7 @@ const RegistrationPage = () => {
   };
 
   return (
-    <div className="min-h-screen   from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4 py-12">
+    <div className="min-h-screen from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4 py-12">
       <div className="w-full max-w-2xl">
         {/* Logo and Header */}
         <div className="text-center mb-8">
@@ -180,21 +160,21 @@ const RegistrationPage = () => {
         {/* Registration Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           {/* Success/Error Message */}
-          {message.text && (
+          {(isSuccess  || isError) && message && (
             <div className={`mb-6 p-4 rounded-lg flex items-start gap-3 ${
-              message.type === 'success' 
+              isSuccess 
                 ? 'bg-green-50 border border-green-200' 
                 : 'bg-red-50 border border-red-200'
             }`}>
-              {message.type === 'success' ? (
+              {isSuccess ? (
                 <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
               ) : (
-                <AlertCircle className="w-5 h-5 text-red-600  mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
               )}
               <span className={`text-sm ${
-                message.type === 'success' ? 'text-green-800' : 'text-red-800'
+                isSuccess ? 'text-green-800' : 'text-red-800'
               }`}>
-                {message.text}
+                {isSuccess ? 'Registration successful! Check your email to verify your account.' : message}
               </span>
             </div>
           )}
@@ -217,7 +197,7 @@ const RegistrationPage = () => {
                     errors.firstName ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="John"
-                  disabled={loading}
+                  disabled={isLoading}
                 />
               </div>
               {errors.firstName && (
@@ -241,7 +221,7 @@ const RegistrationPage = () => {
                     errors.lastName ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Doe"
-                  disabled={loading}
+                  disabled={isLoading}
                 />
               </div>
               {errors.lastName && (
@@ -266,7 +246,7 @@ const RegistrationPage = () => {
                   errors.email ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="john.doe@example.com"
-                disabled={loading}
+                disabled={isLoading}
               />
             </div>
             {errors.email && (
@@ -290,7 +270,7 @@ const RegistrationPage = () => {
                   errors.mobileNo ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="1234567890"
-                disabled={loading}
+                disabled={isLoading}
               />
             </div>
             {errors.mobileNo && (
@@ -314,7 +294,7 @@ const RegistrationPage = () => {
                   errors.password ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Enter strong password"
-                disabled={loading}
+                disabled={isLoading}
               />
               <button
                 type="button"
@@ -349,7 +329,7 @@ const RegistrationPage = () => {
                   errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Confirm your password"
-                disabled={loading}
+                disabled={isLoading}
               />
               <button
                 type="button"
@@ -372,12 +352,14 @@ const RegistrationPage = () => {
                 checked={agreeToTerms}
                 onChange={(e) => setAgreeToTerms(e.target.checked)}
                 className="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                disabled={isLoading}
               />
               <span className="text-sm text-gray-700">
                 I agree to the{' '}
                 <button
                   onClick={() => navigate('/terms')}
                   className="text-indigo-600 hover:text-indigo-700 font-medium"
+                  type="button"
                 >
                   Terms and Conditions
                 </button>
@@ -385,6 +367,7 @@ const RegistrationPage = () => {
                 <button
                   onClick={() => navigate('/privacy')}
                   className="text-indigo-600 hover:text-indigo-700 font-medium"
+                  type="button"
                 >
                   Privacy Policy
                 </button>
@@ -398,10 +381,10 @@ const RegistrationPage = () => {
           {/* Register Button */}
           <button
             onClick={handleRegister}
-            disabled={loading}
+            disabled={isLoading}
             className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
           >
-            {loading ? (
+            {isLoading ? (
               <>
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 <span>Creating Account...</span>
@@ -420,6 +403,7 @@ const RegistrationPage = () => {
             <button
               onClick={() => navigate('/login')}
               className="text-sm text-indigo-600 hover:text-indigo-700 font-medium transition"
+              type="button"
             >
               Sign in
             </button>
@@ -432,6 +416,7 @@ const RegistrationPage = () => {
             <button 
               onClick={() => navigate('/')}
               className="hover:text-indigo-600 transition"
+              type="button"
             >
               Home
             </button>
@@ -439,6 +424,7 @@ const RegistrationPage = () => {
             <button 
               onClick={() => navigate('/help')}
               className="hover:text-indigo-600 transition"
+              type="button"
             >
               Help
             </button>
@@ -446,6 +432,7 @@ const RegistrationPage = () => {
             <button 
               onClick={() => navigate('/contact')}
               className="hover:text-indigo-600 transition"
+              type="button"
             >
               Contact
             </button>

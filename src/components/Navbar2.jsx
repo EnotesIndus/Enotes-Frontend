@@ -22,6 +22,7 @@ export default function Navbar() {
     { label: 'Todo', path: '/todo', icon: CheckSquare },
     { label: 'GPT', path: '/gpt', icon: MessageSquare },
     { label: 'Products', path: '/products', icon: Package },
+ 
   ];
 
   return (
@@ -40,7 +41,7 @@ export default function Navbar() {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:bg-slate-700 hover:text-white"
+              className="flex items-center gap-2 px-4 py-2  rounded-lg   hover:bg-slate-700 hover:text-purple-400 transition"
             >
               <Icon size={18} />
               {label}
@@ -50,7 +51,7 @@ export default function Navbar() {
           <div className="relative" ref={userBoxRef}>
             <button
               onClick={() => setIsUserBoxOpen(!isUserBoxOpen)}
-              className="w-10 h-10 rounded-full text-white shadow-md"
+              className="w-10 h-10 rounded-full  shadow-md"
             >
               <User size={20} />
             </button>

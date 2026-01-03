@@ -4,9 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const Footer = ({ onReset }) =>{ 
 
   const navigate = useNavigate();
-  const onClickReset= () => {
-    navigate('/reset-request');
-  }
+ 
   return (
   <footer className="bg-gray-900 text-gray-400 py-12">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,12 +28,6 @@ const Footer = ({ onReset }) =>{
         <div>
           <h3 className="text-white font-semibold mb-4">Quick Links</h3>
           <div className="flex flex-col gap-2">
-            <button
-              onClick={onClickReset}
-              className="text-sm text-left hover:text-indigo-400"
-            >
-              Reset Password
-            </button>
             <a href="/privacy" className="text-sm hover:text-indigo-400">
               Privacy Policy
             </a>

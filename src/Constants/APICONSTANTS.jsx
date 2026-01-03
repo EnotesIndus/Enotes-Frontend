@@ -14,11 +14,12 @@ export const ALL_USER_PROFILES = API_BASE_URL_USER + '/user-profiles';
 export const CHANGE_PASSWORD = API_BASE_URL_USER + '/change-password';
 
 // todos endpoints
-export const ALL_TODO = API_BASE_URL_TODO + '/all';
-export const SAVE_TODO = API_BASE_URL_TODO + '/save-todo';
-export const GET_TODO_BY_ID = API_BASE_URL_TODO; //use /{id}
-export const GET_TODO_BY_STATUS = API_BASE_URL_TODO +'/by-status';
-
+export const TODO_ENDPOINTS = {
+    ALL_TODO: API_BASE_URL_TODO + '/all',
+    SAVE_TODO: API_BASE_URL_TODO + '/save-todo',
+    GET_TODO_BY_ID: API_BASE_URL_TODO, //use /{id}
+    GET_TODO_BY_STATUS: API_BASE_URL_TODO +'/by-status',
+}
 
 export const NOTES_ENDPOINTS = {
 // notes endpoints
@@ -57,9 +58,10 @@ export const DELETE_CATEGORY = API_BASE_URL_CATEGORY ;  // use {id};
 
 
 // auth endpoints
-export const REGISTER_USER = API_BASE_URL_AUTH + '/register';
-export const LOGIN_USER = API_BASE_URL_AUTH + '/login';
-
+export const AUTH_ENDPOINTS = {
+ REGISTER_USER : API_BASE_URL_AUTH + '/register',
+ LOGIN_USER : API_BASE_URL_AUTH + '/login',
+}
 
 
 

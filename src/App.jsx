@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import PasswordResetRequestPage from './pages/PasswordResetRequestPage';
@@ -11,40 +11,19 @@ import Navbar from './components/Navbar2';
 import UserProfile from './pages/User';
 import Gpt from './pages/Gpt';
 import Products from './pages/Products';
+import EmailVerificationPage from './pages/EmailVerificationPage';
+import NavbarWrapper from './wrapper/NavbarWrapper';
+import AppRoutes from './wrapper/AppRoutes';
 
 const App = () => {
+
+
+ 
   return (
     <BrowserRouter>
-    <Navbar/>
-      <Routes>
-     
-
-        {/* Auth */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<HomePage />} />
-
-        <Route path="/register" element={<RegistrationPage />} />
-        <Route path="/categories" element={<Category />} />
-        <Route path="/notes" element={<Notes/>} />
-        <Route path="/todo" element={<Todo/>} />
-        <Route path="/userprofile" element={<UserProfile />} />
-        <Route path="/gpt" element={<Gpt />} />
-        <Route path="/products" element={<Products />} />
-    
-        {/* Password Reset */}
-        <Route path="/reset-request" element={<PasswordResetRequestPage />} />
-        <Route
-          path="/reset-success"
-          element={
-            <SuccessPage
-              title="Password Reset Complete"
-              message="You can now login."
-              buttonText="Login"
-              buttonAction={() => window.location.href = '/login'}
-            />
-          }
-        />
-      </Routes>
+      <NavbarWrapper />
+      <AppRoutes />
+      
     </BrowserRouter>
   );
 };
