@@ -32,9 +32,9 @@ export const notesAPI = {
 
   // Download file attachment
   downloadFile: (id) => 
-    axiosInstance.get(`${NOTES_ENDPOINTS.DOWNLOAD_NOTES}/${id}`, { 
-      responseType: 'blob' 
-    }),
+    axiosInstance.get(`${NOTES_ENDPOINTS.DOWNLOAD_NOTES}/${id}`,
+    { responseType: 'blob',transformResponse: (r) => r },
+),
 
   // Get recycle bin notes
   getRecycleNotes: () => axiosInstance.get(NOTES_ENDPOINTS.RECYCLE_NOTES),

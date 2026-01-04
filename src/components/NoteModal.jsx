@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Star, X } from 'lucide-react';
-import { saveNote as createNote } from '../redux/notes/noteThunks';
+import { Download, Star, X } from 'lucide-react';
+import { saveNote as createNote, downloadFile } from '../redux/notes/noteThunks';
 
 const NoteModal = ({ note, onClose, onToggleFavorite, onRefresh }) => {
   const dispatch = useDispatch();
@@ -25,10 +25,28 @@ const NoteModal = ({ note, onClose, onToggleFavorite, onRefresh }) => {
     onRefresh();
   };
 
+
+  const downloadNoteFile = () => {
+      if (!editedNote.fileDetails?.id) {
+    console.error('No file attached to this note');
+    return;
+  }
+
+  console.log(
+    '⬇️ Downloading file with FILE ID:',
+    editedNote.fileDetails.id
+  );
+  dispatch(downloadFile({
+      fileId: editedNote.fileDetails.id,
+      fileName: editedNote.fileDetails.displayFileName, // ✅ custom name
+    }));
+
+  }
+    
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full h-full max-h-screen flex flex-col">
-        <div className="from-indigo-600 to-purple-600 text-white px-6 py-4 flex items-center justify-between border-b">
+        <div className="from-indigo-600 to-purple-600  px-6 py-4 flex items-center justify-between border-b">
           <div className="flex items-center gap-4 flex-1">
             {onToggleFavorite && (
               <>
@@ -38,7 +56,7 @@ const NoteModal = ({ note, onClose, onToggleFavorite, onRefresh }) => {
                 >
                   <Star
                     size={20}
-                    className={editedNote.isFavorite ? 'fill-yellow-300 text-yellow-300' : 'text-white'}
+                    className={editedNote.isFavorite ? 'fill-yellow-300 text-yellow-300' : 'text-black'}
                   />
                   <span className="text-sm font-medium">
                     {editedNote.isFavorite ? 'Unfavorite' : 'Favorite'}
@@ -73,23 +91,35 @@ const NoteModal = ({ note, onClose, onToggleFavorite, onRefresh }) => {
           </button>
         </div>
         <div className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-4xl mx-auto space-y-6">
-            {isEditing ? (
-              <input
-                type="text"
-                value={editedNote.title}
-                onChange={(e) => setEditedNote({ ...editedNote, title: e.target.value })}
-                className="w-full text-4xl font-bold text-gray-900 border-b-2 border-gray-300 focus:border-indigo-600 focus:outline-none pb-2"
-              />
-            ) : (
-              <h1 className="text-4xl font-bold text-gray-900">{editedNote.title}</h1>
-            )}
+          <div className="max-w-7xl mx-auto space-y-6">
+            <div className="flex items-center justify-between gap-4">
+  {isEditing ? (
+    <input
+      type="text"
+      value={editedNote.title}
+      onChange={(e) => setEditedNote({ ...editedNote, title: e.target.value })}
+      className="flex-1 text-4xl font-bold text-gray-900 border-b-2 border-gray-300 focus:border-indigo-600 focus:outline-none pb-2"
+    />
+  ) : (
+    <h1 className="text-4xl font-bold text-gray-900 flex-1">
+      {editedNote.title}
+    </h1>
+  )}
+
+  {/* Download Button */}
+  <button
+    onClick={downloadNoteFile}
+    title="Download attachment"
+    className="p-3 rounded-lg bg-indigo-600 hover:bg-indigo-700   transition"
+  >{editedNote.attachmentName}
+    <Download size={22} />
+  </button>
+</div>
             {isEditing ? (
               <textarea
                 value={editedNote.description}
                 onChange={(e) => setEditedNote({ ...editedNote, description: e.target.value })}
-                className="w-full min-h-96 text-lg text-gray-700 leading-relaxed border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+                className="w-full min-h-[65vh] text-lg p-6 border rounded-lg"/>
             ) : (
               <p className="text-lg text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {editedNote.description}

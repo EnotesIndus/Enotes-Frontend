@@ -28,14 +28,14 @@ const Notes = () => {
               <button
                 onClick={handleDownloadExcel}
                 disabled={isLoading}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 bg-green-600   rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
               >
                 <FileDown size={18} />
                 Export Excel
               </button>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600   rounded-lg hover:bg-indigo-700 transition-colors"
               >
                 <Plus size={18} />
                 New Note
@@ -60,7 +60,7 @@ const Notes = () => {
               onClick={() => setCurrentView('all')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 currentView === 'all'
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-indigo-600  '
                   : 'bg-white text-gray-700 hover:bg-gray-100'
               }`}
             >

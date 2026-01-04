@@ -224,6 +224,11 @@ const notesSlice = createSlice({
       .addCase(downloadExcel.fulfilled, (state) => {
         state.message = 'Excel downloaded successfully';
       });
+
+      // Download File
+      builder.addCase(downloadFile.fulfilled, (state) => {
+        state.message = 'File downloaded successfully';
+      });  
   },
 });
 

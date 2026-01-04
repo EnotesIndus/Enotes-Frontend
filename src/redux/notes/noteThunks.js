@@ -72,12 +72,30 @@ export const restoreNote = createAsyncThunk(
 
 export const downloadFile = createAsyncThunk(
   'notes/downloadFile',
-  async (id, { rejectWithValue }) => {
+  async ({ fileId, fileName }, { rejectWithValue }) => {
     try {
-      const response = await notesAPI.downloadFile(id);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      const response = await notesAPI.downloadFile(fileId);
+
+      // Blob with the correct MIME type
+      const contentType = response.headers['content-type'] || 'application/octet-stream';
+      const blob = new Blob([response.data], { type: contentType });
+
+      // Use fileName from your note object (fileDetails.displayFileName)
+      const filename = fileName || 'download';
+
+      // Create temporary download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      return true;
+    } catch (err) {
+      return rejectWithValue('Download failed');
     }
   }
 );
