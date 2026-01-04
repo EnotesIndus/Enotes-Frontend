@@ -12,6 +12,8 @@ import EmailVerificationPage from '../pages/EmailVerificationPage'
 import PasswordResetRequestPage from '../pages/PasswordResetRequestPage'
 import { Route, Routes } from 'react-router-dom'
 import SuccessPage from '../pages/SuccessPage'
+import ResetPassword from '../pages/ResetPassword'
+import ResetPasswordForm from '../pages/ResetPasswordForm'
 
 const AppRoutes = () => {
   return (
@@ -30,6 +32,11 @@ const AppRoutes = () => {
         <Route path="/gpt" element={<Gpt />} />
         <Route path="/products" element={<Products />} />
         <Route path="/verify" element={<EmailVerificationPage />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+<Route
+  path="/reset-password-form"
+  element={<ResetPasswordForm />}
+/>
     
         {/* Password Reset */}
         <Route path="/reset-request" element={<PasswordResetRequestPage />} />

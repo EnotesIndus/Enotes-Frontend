@@ -135,10 +135,10 @@ const Todo = () => {
   };
 
   const handleDeleteTodo = async (id) => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
-      await dispatch(deleteTodo(id));
-      // No need to refresh - the reducer already removes it from state
-    }
+    await dispatch(deleteTodo(id));
+    // if (window.confirm('Are you sure you want to delete this task?')) {
+    //   // No need to refresh - the reducer already removes it from state
+    // }
   };
 
   const updateStatus = async (id, newStatus) => {

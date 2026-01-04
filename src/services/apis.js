@@ -1,5 +1,5 @@
 import axiosInstance from './axiosConfig';
-import { NOTES_ENDPOINTS, TODO_ENDPOINTS,AUTH_ENDPOINTS } from '../Constants/APICONSTANTS';
+import { NOTES_ENDPOINTS, TODO_ENDPOINTS,AUTH_ENDPOINTS, USER_ENDPOINTS } from '../Constants/APICONSTANTS';
 
 export const authAPI = {
   login: (credentials) => axiosInstance.post(AUTH_ENDPOINTS.LOGIN_USER, credentials),
@@ -83,4 +83,26 @@ export const todoAPI = {
     });
   }
   
+}
+
+export const userAPI = {
+  changePassword: (passwordData) => axiosInstance.post(USER_ENDPOINTS.CHANGE_PASSWORD, passwordData),
+
+    resetPasswordMail: (email) =>
+  axiosInstance.get(USER_ENDPOINTS.RESET_PASSWORD_MAIL, {
+    params: { email }
+  }),
+  verifyEmailResetLink: ({ uid, resetCode }) =>
+      axiosInstance.get(USER_ENDPOINTS.VERIFY_EMAIL_RESET_LINK, {
+        params: {
+          uid,
+          resetCode
+        }
+  }),
+
+
+  resetPassword: (data) =>
+  axiosInstance.post(USER_ENDPOINTS.RESET_PASSWORD, data),
+
+
 }

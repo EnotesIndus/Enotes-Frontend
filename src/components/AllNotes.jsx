@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Search } from 'lucide-react';
+import { ChevronLeft, ChevronLeftCircle, ChevronLeftCircleIcon, ChevronLeftIcon, ChevronRight, Search } from 'lucide-react';
 import {
   fetchUserNotes,
   searchNotes,
@@ -106,9 +106,10 @@ const AllNotes = ({ searchKeyword }) => {
           <button
             onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
             disabled={currentPage === 0 || isLoading}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 bg-indigo-600  rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            Previous
+                <ChevronLeft className="w-5 h-5" />
+
           </button>
           
           <span className="text-gray-700 font-medium">
@@ -118,16 +119,14 @@ const AllNotes = ({ searchKeyword }) => {
           <button
             onClick={() => setCurrentPage(prev => prev + 1)}
             disabled={pagination?.islast || isLoading}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 bg-indigo-600  rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            Next
+           <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       )}
 
-      <p className="text-center text-sm text-gray-600 mt-4">
-        Showing {displayNotes.length} of {pagination?.totalElements || displayNotes.length} notes
-      </p>
+      
 
       {selectedNote && (
         <NoteModal

@@ -10,8 +10,13 @@ export const API_BASE_URL_TODO = import.meta.env.VITE_API_URL_BACK + 'todo';
 
 
 // users endpoints
-export const ALL_USER_PROFILES = API_BASE_URL_USER + '/user-profiles';
-export const CHANGE_PASSWORD = API_BASE_URL_USER + '/change-password';
+export const USER_ENDPOINTS = {
+ ALL_USER_PROFILES: API_BASE_URL_USER + '/user-profiles',
+ CHANGE_PASSWORD : API_BASE_URL_USER + '/change-password',
+  RESET_PASSWORD_MAIL : API_BASE_URL_HOME + '/reset-password-mail',
+  VERIFY_EMAIL_RESET_LINK : API_BASE_URL_HOME + '/email-verify',  
+  RESET_PASSWORD : API_BASE_URL_HOME + '/reset-password',  
+}
 
 // todos endpoints
 export const TODO_ENDPOINTS = {
@@ -46,9 +51,7 @@ export const NOTES_ENDPOINTS = {
 
 // home endpoints
 export const VERIFY_EMAIL_USER = API_BASE_URL_HOME + '/verify';  
-export const RESET_PASSWORD_MAIL = API_BASE_URL_HOME + '/reset-password-mail';  
-export const VERIFY_EMAIL_RESET_LINK = API_BASE_URL_HOME + '/email-verify';  
-export const RESET_PASSWORD = API_BASE_URL_HOME + '/reset-password';  
+
 
 
 // Category endpoints
