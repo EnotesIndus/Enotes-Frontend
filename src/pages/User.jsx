@@ -1,25 +1,39 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { User, Lock, Mail, Shield, ChevronRight } from 'lucide-react';
 import ChangePassword from '../components/ChangePassword';
 import ForgotPassword from '../components/ForgotPassword';
+import EditProfileModal from "../components/EditProfileModal";
+import { editUser } from "../redux/users/userThunks";
 
 const UserProfile = () => {
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-
+  // Get user from Redux store instead of localStorage
+  const storedUser = useSelector((state) => state.user?.currentUser);
+  
+  // Initialize state from Redux or localStorage as fallback
+  const [user, setUser] = useState(() => {
+    return storedUser || JSON.parse(localStorage.getItem("user") || 'null');
+  });
+  
   const [activeSection, setActiveSection] = useState('profile');
-  const user = storedUser;
+
+  // Sync with Redux store when it changes
+  useEffect(() => {
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, [storedUser]);
 
   const renderContent = () => {
     switch (activeSection) {
       case 'profile':
-        return <ProfileInfo user={user} />;
+        return <ProfileInfo user={user} setUser={setUser} />;
       case 'change-password':
         return <ChangePassword />;
       case 'forgot-password':
         return <ForgotPassword />;
       default:
-        return <ProfileInfo user={user} />;
+        return <ProfileInfo user={user} setUser={setUser} />;
     }
   };
 
@@ -43,15 +57,16 @@ const UserProfile = () => {
               <nav className="space-y-2">
                 <button
                   onClick={() => setActiveSection('profile')}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors  ${
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
                     activeSection === 'profile'
-                      ? 'bg-indigo-600 text-blue-800'
-                      : 'text-black hover:bg-gray-700'
+                      ? 'text-blue-300 hover:bg-gray-700'
+                      : 'bg-indigo-600 text-black'
+                      
                   }`}
                 >
-                  <div className="flex items-center gap-3 ">
+                  <div className="flex items-center gap-3">
                     <User className="w-5 h-5" />
-                    <span className="text-sm font-medium ">Profile Info</span>
+                    <span className="text-sm font-medium">Profile Info</span>
                   </div>
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -60,8 +75,9 @@ const UserProfile = () => {
                   onClick={() => setActiveSection('change-password')}
                   className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
                     activeSection === 'change-password'
-                      ? 'bg-indigo-600 text-blue-800'
-                      : 'text-black hover:bg-gray-700'
+                      ? 'text-green-500 hover:bg-gray-700'
+                      : 'bg-indigo-600 text-black'
+                      
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -75,8 +91,9 @@ const UserProfile = () => {
                   onClick={() => setActiveSection('forgot-password')}
                   className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
                     activeSection === 'forgot-password'
-                      ? 'bg-indigo-600 text-blue-800'
-                      : 'text-black hover:bg-gray-700'
+                      ? 'text-red-600 hover:bg-gray-700'
+                      : 'bg-indigo-600 text-black'
+                      
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -106,6 +123,7 @@ const UserProfile = () => {
     </div>
   );
 };
+
 const InfoCard = ({ icon, label, value }) => {
   return (
     <div className="bg-gray-50 p-5 rounded-lg flex items-start gap-4">
@@ -118,8 +136,38 @@ const InfoCard = ({ icon, label, value }) => {
   );
 };
 
+const ProfileInfo = ({ user, setUser }) => {
+  const [openEdit, setOpenEdit] = useState(false);
+  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
 
-const ProfileInfo = ({ user }) => {
+  const handleSave = async (updatedUser) => {
+    try {
+      setError(null);
+      const result = await dispatch(editUser(updatedUser));
+
+      if (editUser.fulfilled.match(result)) {
+        const updatedLocalUser = {
+          ...user,
+          ...updatedUser
+        };
+
+        // Update local state (triggers re-render)
+        setUser(updatedLocalUser);
+
+        // Keep localStorage in sync
+        localStorage.setItem("user", JSON.stringify(updatedLocalUser));
+
+        setOpenEdit(false);
+      } else if (editUser.rejected.match(result)) {
+        setError(result.payload || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Failed to update user:", error);
+      setError(error.message || "An unexpected error occurred");
+    }
+  };
+
   const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`.trim();
 
   return (
@@ -135,8 +183,10 @@ const ProfileInfo = ({ user }) => {
           </p>
         </div>
 
-        {/* Edit Button */}
-        <button className="px-5 py-2.5 rounded-lg bg-indigo-600  text-sm font-medium hover:bg-indigo-700 transition">
+        <button
+          onClick={() => setOpenEdit(true)}
+          className="px-5 py-2.5 rounded-lg bg-indigo-600  text-sm font-medium hover:bg-indigo-700 transition"
+        >
           Edit Profile
         </button>
       </div>
@@ -165,7 +215,6 @@ const ProfileInfo = ({ user }) => {
           </div>
         </div>
 
-        {/* Details Grid */}
         <div className="grid md:grid-cols-2 gap-6 mt-8">
           <InfoCard icon={<Mail />} label="Email Address" value={user?.email} />
           <InfoCard icon={<User />} label="Mobile Number" value={user?.mobileNo} />
@@ -176,6 +225,20 @@ const ProfileInfo = ({ user }) => {
           />
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {error && (
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          {error}
+        </div>
+      )}
+      
+      <EditProfileModal
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        user={user}
+        onSave={handleSave}
+      />
     </div>
   );
 };

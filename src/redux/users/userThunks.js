@@ -51,3 +51,15 @@ export const resetPassword = createAsyncThunk(
         }           
     }
 );
+
+export const editUser = createAsyncThunk(
+    'user/editUser',
+    async (userData, {rejectWithValue})=>{
+        try{
+                const response = await userAPI.editUser(userData);
+                return response.data;
+        }catch(error){
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }           
+    }   
+)

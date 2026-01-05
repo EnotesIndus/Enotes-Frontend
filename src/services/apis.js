@@ -100,9 +100,10 @@ export const userAPI = {
         }
   }),
 
+  resetPassword: (data) =>axiosInstance.post(USER_ENDPOINTS.RESET_PASSWORD, data),
 
-  resetPassword: (data) =>
-  axiosInstance.post(USER_ENDPOINTS.RESET_PASSWORD, data),
 
+  editUser: (userData) => axiosInstance.put(USER_ENDPOINTS.EDIT_USER, userData),
 
 }
+

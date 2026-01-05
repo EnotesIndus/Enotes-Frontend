@@ -13,6 +13,7 @@ export const API_BASE_URL_TODO = import.meta.env.VITE_API_URL_BACK + 'todo';
 export const USER_ENDPOINTS = {
  ALL_USER_PROFILES: API_BASE_URL_USER + '/user-profiles',
  CHANGE_PASSWORD : API_BASE_URL_USER + '/change-password',
+ EDIT_USER : API_BASE_URL_USER + '/edit-user',
   RESET_PASSWORD_MAIL : API_BASE_URL_HOME + '/reset-password-mail',
   VERIFY_EMAIL_RESET_LINK : API_BASE_URL_HOME + '/email-verify',  
   RESET_PASSWORD : API_BASE_URL_HOME + '/reset-password',  

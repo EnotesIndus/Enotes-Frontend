@@ -51,12 +51,12 @@ const Todo = () => {
     }
   }, [isSuccess, isError, message, dispatch]);
 
-  const filteredTodos =
+ const filteredTodos =
   currentFilter === 'all'
-    ? todos
-    : todos.filter(
+    ? (Array.isArray(todos) ? todos : [])
+    : (Array.isArray(todos) ? todos.filter(
         todo => todo.status?.toUpperCase() === currentFilter
-      );
+      ) : []);
 
 
   const getStatusIcon = (status) => {

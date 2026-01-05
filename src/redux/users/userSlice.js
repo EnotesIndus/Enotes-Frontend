@@ -3,6 +3,7 @@ import {
   sendResetPasswordMail,
   verifyResetPasswordToken,
   resetPassword
+  , editUser
 } from "./userThunks";
 
 const initialState = {
@@ -24,6 +25,12 @@ const initialState = {
     isError: false,
     message: '',
   },
+   editUser: {
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+    message: ''
+  }
 };
 
 const userSlice = createSlice({
@@ -34,6 +41,7 @@ const userSlice = createSlice({
       state.sendMail = initialState.sendMail;
       state.verifyToken = initialState.verifyToken;
       state.resetPassword = initialState.resetPassword;
+      state.editUser = initialState.editUser;
     },
   },
 
@@ -86,6 +94,32 @@ const userSlice = createSlice({
         state.resetPassword.isError = true;
         state.resetPassword.message = action.payload;
       });
+
+      // ================= EDIT USER =================
+ 
+    builder
+      .addCase(editUser.pending, (state) => { 
+        state.editUser.isLoading = true;
+        state.editUser.isError = false;
+        state.editUser.isSuccess = false;
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.editUser.isLoading = false;
+        state.editUser.isSuccess = true;
+        state.editUser.message = action.payload?.message || "User edited successfully";
+        
+        // Update the current user in Redux state
+        if (action.payload?.user) {
+          state.currentUser = action.payload.user;
+        }
+      })
+      .addCase(editUser.rejected, (state, action) => {
+        state.editUser.isLoading = false;
+        state.editUser.isError = true;
+        state.editUser.isSuccess = false;
+        state.editUser.message = action.payload;
+      });
+    
   },
 });
 
