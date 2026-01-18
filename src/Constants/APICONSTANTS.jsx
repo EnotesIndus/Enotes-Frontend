@@ -6,6 +6,7 @@ export const API_BASE_URL_CATEGORY = import.meta.env.VITE_API_URL_BACK + 'catego
 export const API_BASE_URL_HOME = import.meta.env.VITE_API_URL_BACK + 'home';
 export const API_BASE_URL_NOTES = import.meta.env.VITE_API_URL_BACK + 'notes';
 export const API_BASE_URL_TODO = import.meta.env.VITE_API_URL_BACK + 'todo';
+export const API_BASE_URL_COMPILER = import.meta.env.VITE_API_URL_BACK + 'compiler';
 
 
 
@@ -69,6 +70,7 @@ export const AUTH_ENDPOINTS = {
  LOGIN_USER : API_BASE_URL_AUTH + '/login',
 }
 
+export const COMPILER_ENDPOINT = API_BASE_URL_COMPILER;
 
 
 

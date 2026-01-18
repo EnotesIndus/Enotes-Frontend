@@ -14,6 +14,7 @@ import Products from './pages/Products';
 import EmailVerificationPage from './pages/EmailVerificationPage';
 import NavbarWrapper from './wrapper/NavbarWrapper';
 import AppRoutes from './wrapper/AppRoutes';
+import CodeEditor from './components/CodeEditor';
 
 const App = () => {
 

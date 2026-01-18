@@ -14,6 +14,7 @@ import { Route, Routes } from 'react-router-dom'
 import SuccessPage from '../pages/SuccessPage'
 import ResetPassword from '../pages/ResetPassword'
 import ResetPasswordForm from '../pages/ResetPasswordForm'
+import CompilerPage from '../pages/CompilerPage'
 
 const AppRoutes = () => {
   return (
@@ -33,6 +34,8 @@ const AppRoutes = () => {
         <Route path="/products" element={<Products />} />
         <Route path="/verify" element={<EmailVerificationPage />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/compiler" element={<CompilerPage />} />
+      
 <Route
   path="/reset-password-form"
   element={<ResetPasswordForm />}

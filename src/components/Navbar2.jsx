@@ -6,10 +6,12 @@ import {
   MessageSquare,
   Package,
   BookOpen,
-  User
+  User,
+  Codesandbox
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import UserBox from './UserBox';
+
 
 export default function Navbar() {
   const [isUserBoxOpen, setIsUserBoxOpen] = useState(false);
@@ -22,6 +24,7 @@ export default function Navbar() {
     { label: 'Todo', path: '/todo', icon: CheckSquare },
     { label: 'GPT', path: '/gpt', icon: MessageSquare },
     { label: 'Products', path: '/products', icon: Package },
+    { label: 'compiler', path: '/compiler', icon: Codesandbox },
  
   ];
 
@@ -51,7 +54,7 @@ export default function Navbar() {
           <div className="relative" ref={userBoxRef}>
             <button
               onClick={() => setIsUserBoxOpen(!isUserBoxOpen)}
-              className="w-10 h-10 rounded-full  shadow-md"
+              className="w-10 h-10 rounded-full  shadow-md "
             >
               <User size={20} />
             </button>

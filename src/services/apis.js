@@ -1,5 +1,5 @@
 import axiosInstance from './axiosConfig';
-import { NOTES_ENDPOINTS, TODO_ENDPOINTS,AUTH_ENDPOINTS, USER_ENDPOINTS } from '../Constants/APICONSTANTS';
+import { NOTES_ENDPOINTS, TODO_ENDPOINTS,AUTH_ENDPOINTS, USER_ENDPOINTS, COMPILER_ENDPOINT } from '../Constants/APICONSTANTS';
 
 export const authAPI = {
   login: (credentials) => axiosInstance.post(AUTH_ENDPOINTS.LOGIN_USER, credentials),
@@ -106,4 +106,9 @@ export const userAPI = {
   editUser: (userData) => axiosInstance.put(USER_ENDPOINTS.EDIT_USER, userData),
 
 }
+
+
+export const compileApi ={
+  runCode:(payload) => axiosInstance.post(COMPILER_ENDPOINT, payload)
+};
 
