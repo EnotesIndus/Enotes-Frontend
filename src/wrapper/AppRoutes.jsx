@@ -15,6 +15,7 @@ import SuccessPage from '../pages/SuccessPage'
 import ResetPassword from '../pages/ResetPassword'
 import ResetPasswordForm from '../pages/ResetPasswordForm'
 import CompilerPage from '../pages/CompilerPage'
+import VerifyPage from '../pages/VerifyPage'
 
 const AppRoutes = () => {
   return (
@@ -35,6 +36,7 @@ const AppRoutes = () => {
         <Route path="/verify" element={<EmailVerificationPage />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/compiler" element={<CompilerPage />} />
+        <Route path="/verify" element={<VerifyPage />} />
       
 <Route
   path="/reset-password-form"
