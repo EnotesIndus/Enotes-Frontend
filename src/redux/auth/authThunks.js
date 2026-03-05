@@ -8,12 +8,9 @@ export const loginUser = createAsyncThunk(
       const response = await authAPI.login(credentials);
       
       if (response.data.status === 'Success' && response.data.data) {
-        const { token, userDto } = response.data.data;
-        
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(userDto));
-        
-        return { token, user: userDto };
+        // No token in response - backend stores it in HttpOnly cookie
+        // Just return the user data
+        return { user: response.data.data.userDto };
       }
       
       return rejectWithValue(response.data.message || 'Login failed');
@@ -30,13 +27,9 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await authAPI.register(userData);
       
-      if (response.data.status === 'Success' && response.data.data) {
-        const { token, userDto } = response.data.data;
-        
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(userDto));
-        
-        return { token, user: userDto };
+      if (response.data.status === 'Success') {
+        // Register just returns a success message, no token/user data
+        return { message: response.data.message };
       }
       
       return rejectWithValue(response.data.message || 'Registration failed');
@@ -51,9 +44,24 @@ export const logoutUser = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      await authAPI.logout(); // Call backend to clear the cookie
       return null;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const refreshToken = createAsyncThunk(
+  'auth/refresh',
+  async (_, { rejectWithValue }) => {
+    try {
+      // Cookie is sent automatically by browser
+      const response = await authAPI.refreshToken();
+      if (response.data.status === 'Success') {
+        return true;
+      }
+      return rejectWithValue('Refresh failed');
     } catch (error) {
       return rejectWithValue(error.message);
     }
